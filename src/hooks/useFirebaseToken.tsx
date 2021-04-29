@@ -20,7 +20,7 @@ const FirebaseProvider: React.FC = ({children}) => {
   const handleStorageTokenIntoDatabase = useCallback((deviceToken: string) => {
     // Storage device token on database
 
-    console.log(deviceToken);
+    console.log('Device Token is: ', deviceToken);
   }, []);
 
   const handleGetDeviceToken = useCallback(async () => {

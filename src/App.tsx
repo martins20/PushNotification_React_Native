@@ -1,16 +1,33 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import AppProvider from './hooks';
-import {useFirebaseToken} from './hooks/useFirebaseToken';
+
+import Messaging from '@react-native-firebase/messaging';
 
 import {Button, ButtonText, Container, Text} from './styles/App';
 
 const App: React.FC = () => {
-  const {token} = useFirebaseToken();
+  const handleRequestPermission = useCallback(async () => {
+    try {
+      const authStatus = await Messaging().requestPermission();
+
+      const enabled =
+        Messaging.AuthorizationStatus.AUTHORIZED ||
+        Messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        console.log('Firebase Messaging is Authorized: ', authStatus);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   useEffect(() => {
-    console.log(token);
-  }, [token]);
+    handleRequestPermission();
+
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <AppProvider>
@@ -18,7 +35,7 @@ const App: React.FC = () => {
         <StatusBar barStyle={'light-content'} backgroundColor="#643bc1" />
         <Text>Notification</Text>
         <Button activeOpacity={0.7}>
-          <ButtonText>Test</ButtonText>
+          <ButtonText>Receive Notification</ButtonText>
         </Button>
       </Container>
     </AppProvider>
